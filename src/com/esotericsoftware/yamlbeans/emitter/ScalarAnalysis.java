@@ -50,6 +50,40 @@ class ScalarAnalysis {
 		this.allowDoubleQuoted = allowDoubleQuoted;
 		this.allowBlock = allowBlock;
 	}
+	
+	public static class Builder {
+		private String scalar = null;
+		private boolean empty = false;
+		private boolean multiline = false;
+		private boolean allowFlowPlain = false;
+		private boolean allowBlockPlain = false;
+		private boolean allowSingleQuoted = false;
+		private boolean allowDoubleQuoted = false;
+		private boolean allowBlock = false;
+		
+		public Builder (String scalar) {
+			this.scalar = scalar;
+		}
+		
+		public Builder empty (boolean val) { this.empty = val; return this; }
+		public Builder multiline (boolean val) { this.multiline = val; return this; }
+		public Builder allowFlowPlain (boolean val) { this.allowFlowPlain = val; return this; }
+		public Builder allowBlockPlain (boolean val) { this.allowBlockPlain = val; return this; }
+		public Builder allowSingleQuoted (boolean val) { this.allowSingleQuoted = val; return this; }
+		public Builder allowDoubleQuoted (boolean val) { this.allowDoubleQuoted = val; return this; }
+		public Builder allowBlock (boolean val) { this.allowBlock = val; return this; }
+	}
+	
+	public ScalarAnalysis (Builder builder) {
+		this.scalar = builder.scalar;
+		this.empty = builder.empty;
+		this.multiline = builder.multiline;
+		this.allowFlowPlain = builder.allowFlowPlain;
+		this.allowBlockPlain = builder.allowBlockPlain;
+		this.allowSingleQuoted = builder.allowSingleQuoted;
+		this.allowDoubleQuoted = builder.allowDoubleQuoted;
+		this.allowBlock = builder.allowBlock;
+	}
 
 	static public ScalarAnalysis analyze (String scalar, boolean escapeUnicode) {
 		if (scalar == null) return new ScalarAnalysis(scalar, true, false, false, true, true, true, false);
