@@ -72,6 +72,8 @@ class ScalarAnalysis {
 		public Builder allowSingleQuoted (boolean val) { this.allowSingleQuoted = val; return this; }
 		public Builder allowDoubleQuoted (boolean val) { this.allowDoubleQuoted = val; return this; }
 		public Builder allowBlock (boolean val) { this.allowBlock = val; return this; }
+		
+		public ScalarAnalysis build(){return new ScalarAnalysis(this);}
 	}
 	
 	public ScalarAnalysis (Builder builder) {
@@ -85,9 +87,31 @@ class ScalarAnalysis {
 		this.allowBlock = builder.allowBlock;
 	}
 
-	static public ScalarAnalysis analyze (String scalar, boolean escapeUnicode) {
-		if (scalar == null) return new ScalarAnalysis(scalar, true, false, false, true, true, true, false);
-		if ("".equals(scalar)) return new ScalarAnalysis(scalar, false, false, false, false, false, true, false);
+	static public ScalarAnalysis analyze (String scalar, boolean escapeUnicode) {		
+		if (scalar == null) {
+			return new ScalarAnalysis.Builder(scalar)
+					.empty(true)
+					.multiline(false)
+					.allowFlowPlain(false)
+					.allowBlockPlain(true)
+					.allowSingleQuoted(true)
+					.allowDoubleQuoted(true)
+					.allowBlock(false)
+					.build();
+		}
+		if ("".equals(scalar)) {
+			return new ScalarAnalysis.Builder(scalar)
+					.empty(false)
+					.multiline(false)
+					.allowFlowPlain(false)
+					.allowBlockPlain(false)
+					.allowSingleQuoted(false)
+					.allowDoubleQuoted(true)
+					.allowBlock(false)
+					.build();
+		}
+		
+		
 		boolean blockIndicators = false;
 		boolean flowIndicators = false;
 		boolean lineBreaks = false;
@@ -254,9 +278,17 @@ class ScalarAnalysis {
 		if (blockIndicators){ 
 			allowBlockPlain = false;
 		}
-
-		return new ScalarAnalysis(scalar, false, lineBreaks, allowFlowPlain, allowBlockPlain, allowSingleQuoted, allowDoubleQuoted,
-			allowBlock);
+		
+			return new ScalarAnalysis.Builder(scalar)
+					.empty(false)
+					.multiline(lineBreaks)
+					.allowFlowPlain(allowFlowPlain)
+					.allowBlockPlain(allowBlockPlain)
+					.allowSingleQuoted(allowSingleQuoted)
+					.allowDoubleQuoted(allowDoubleQuoted)
+					.allowBlock(allowBlock)
+					.build();
+		
 	}
 
 	public String getScalar() {
